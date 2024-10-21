@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import Card from './Card';
+import newsDataJson from './generated_news_data.json'; // here external json file is added
 
 const NewsApp = () => {
-    const API_KEY = "d8645d5500c245ecb1612698d4e437ea";
     const [search, setSearch] = useState("india");
-    const [newsData, setNewsData] = useState(null);
+    const [newsData, setNewsData] = useState([]); // Initialized as an empty array
 
-    const getData = async () => {
-        const response = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`);
-        const jsonData = await response.json();
-        console.log(jsonData.articles);
-        setNewsData(jsonData.articles);
+    //Here Function to filtering data based on the search input
+    const getData = () => {
+        const filteredData = newsDataJson.articles.filter(article => {
+            const title = article.title || ''; 
+            const description = article.description || ''; 
+            return title.toLowerCase().includes(search.toLowerCase()) ||
+                   description.toLowerCase().includes(search.toLowerCase());
+        });
+        setNewsData(filteredData);
     };
 
     useEffect(() => {
-        getData();
+        getData(); // Loaded initial data
     }, []);
 
     const handleInputChange = (event) => {
         setSearch(event.target.value);
+        getData(); // Updated news data on input change
     };
 
     const handleCategoryClick = (category) => {
         setSearch(category);
-        getData(); // Fetch news based on the selected category
+        getData(); // Fetched news based on the selected category
     };
 
     return (
@@ -34,11 +39,16 @@ const NewsApp = () => {
                     <h1>News Sphere</h1>
                 </div>
                 <ul className='main-ul'>
-                    <a>All News</a>
-                    <a>Trending</a>
+                    <li><a href="#">All News</a></li>
+                    <li><a href="#">Trending</a></li>
                 </ul>
                 <div className='searchBar'>
-                    <input type='text' placeholder='Search News' value={search} onChange={handleInputChange} />
+                    <input 
+                        type='text' 
+                        placeholder='Search News' 
+                        value={search} 
+                        onChange={handleInputChange} 
+                    />
                     <button onClick={getData}>Search</button>
                 </div>
             </nav>
@@ -46,7 +56,7 @@ const NewsApp = () => {
             <div className='main-text'>
                 <p className='head'>Stay Updated With NewsSphere</p>
             </div>
-            {/* Categories for filtering news */}
+            {/*It Used Categories for filtering news */}
             <div className='categoryBtn'>
                 <button onClick={() => handleCategoryClick("Sports")}>Sports</button>
                 <button onClick={() => handleCategoryClick("Politics")}>Politics</button>
@@ -57,15 +67,10 @@ const NewsApp = () => {
 
             {/* Creating Cards */}
             <div>
-                {newsData ? <Card data={newsData} /> : null}
+                {newsData.length > 0 ? <Card data={newsData} /> : <p>No articles found.</p>}
             </div>
         </div>
     );
 };
 
 export default NewsApp;
-
-
-
-
-

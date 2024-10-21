@@ -1,11 +1,10 @@
 import React from "react";
 
 const Card = ({ data }) => {
-    console.log(data);
-
     const readMore = (url) => {
         window.open(url);
     };
+
     return (
         <div className="cardContainer">
             {data.map((curItem, index) => {
