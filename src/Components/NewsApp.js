@@ -32,15 +32,15 @@ const NewsApp = () => {
     };
 
     return (
-        <div>
+        <div className='main-container'>
             {/* Navbar */}
             <nav>
                 <div>
                     <h1>News Sphere</h1>
                 </div>
                 <ul className='main-ul'>
-                    <li><a href="#">All News</a></li>
-                    <li><a href="#">Trending</a></li>
+                    <a>All News</a>
+                    <a>Trending</a>
                 </ul>
                 <div className='searchBar'>
                     <input 
